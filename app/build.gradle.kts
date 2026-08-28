@@ -14,6 +14,20 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        // Server config via local.properties — never hardcode IPs/creds in repo.
+        // Define in local.properties: DB_IP, DB_USER, DB_PASSWORD, DB_NAME
+        // Fallbacks below are placeholders for build without local.properties
+        val dbIp: String = (project.findProperty("DB_IP") as String?) ?: "YOUR_SERVER_IP:PORT"
+        val dbUser: String = (project.findProperty("DB_USER") as String?) ?: "YOUR_DB_USER"
+        val dbPassword: String = (project.findProperty("DB_PASSWORD") as String?) ?: "YOUR_DB_PASSWORD"
+        val dbName: String = (project.findProperty("DB_NAME") as String?) ?: "YOUR_DB_NAME"
+        buildConfigField("String", "DB_IP", "\"$dbIp\"")
+        buildConfigField("String", "DB_USER", "\"$dbUser\"")
+        buildConfigField("String", "DB_PASSWORD", "\"$dbPassword\"")
+        buildConfigField("String", "DB_NAME", "\"$dbName\"")
+    }
+    buildFeatures {
+        buildConfig = true
     }
 
     buildTypes {

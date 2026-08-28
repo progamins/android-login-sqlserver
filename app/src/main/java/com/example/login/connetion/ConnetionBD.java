@@ -10,10 +10,11 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 
 public class ConnetionBD {
-    private String ip = "[REDACTADO — credencial filtrada y rotada]";
-    private String usuario = "[REDACTADO]";
-    private String password = "[REDACTADO]";
-    private String basedatos = "Login";
+    // Config via BuildConfig (from local.properties) — no hardcoded secrets.
+    private String ip = com.example.login.BuildConfig.DB_IP;
+    private String usuario = com.example.login.BuildConfig.DB_USER;
+    private String password = com.example.login.BuildConfig.DB_PASSWORD;
+    private String basedatos = com.example.login.BuildConfig.DB_NAME;
 
     @SuppressLint("NewApi")
     public Connection connect() {

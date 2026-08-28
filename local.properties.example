@@ -1,0 +1,6 @@
+﻿# Plantilla - copia a local.properties y completa tus valores
+# Nunca subas local.properties al repo
+DB_IP=TU_SERVIDOR:PUERTO
+DB_USER=tu_usuario
+DB_PASSWORD=tu_password
+DB_NAME=Login
