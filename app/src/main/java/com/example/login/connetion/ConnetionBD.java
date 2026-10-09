@@ -1,13 +1,10 @@
 package com.example.login.connetion;
 
-import static java.lang.Class.forName;
-
-import android.annotation.SuppressLint;
-import android.os.StrictMode;
 import android.util.Log;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.util.Properties;
 
 public class ConnetionBD {
     // Config via BuildConfig (from local.properties) — no hardcoded secrets.
@@ -16,20 +13,25 @@ public class ConnetionBD {
     private String password = com.example.login.BuildConfig.DB_PASSWORD;
     private String basedatos = com.example.login.BuildConfig.DB_NAME;
 
-    @SuppressLint("NewApi")
     public Connection connect() {
         Connection connection = null;
-        String connectionURL = null;
         try {
-            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-            StrictMode.setThreadPolicy(policy);
             Class.forName("net.sourceforge.jtds.jdbc.Driver");
-            connectionURL = "jdbc:jtds:sqlserver://" + this.ip + "/" + this.basedatos + ";user=" + this.usuario + ";password=" + this.password + ";";
-            connection = DriverManager.getConnection(connectionURL);
+            // ssl=require cifra el canal (TLS) para que usuario/contraseña
+            // y datos no viajen en texto plano por la red.
+            String connectionURL = "jdbc:jtds:sqlserver://" + this.ip
+                    + "/" + this.basedatos
+                    + ";ssl=require";
+            Properties props = new Properties();
+            props.setProperty("user", this.usuario);
+            props.setProperty("password", this.password);
+            props.setProperty("loginTimeout", "10");
+            DriverManager.setLoginTimeout(10);
+            connection = DriverManager.getConnection(connectionURL, props);
         } catch (Exception e) {
-            e.printStackTrace();
-            Log.e("error de conexión SQL:", e.getMessage());
+            // Log genérico: nunca registrar credenciales ni mensajes crudos del driver
+            Log.e("ConnetionBD", "No se pudo establecer la conexión con la base de datos");
         }
-    return connection;
+        return connection;
     }
 }

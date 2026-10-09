@@ -19,3 +19,15 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+# ===== Reglas para drivers JDBC (usan reflexión) =====
+# Evita que R8/ofuscación rompa jTDS y MS SQL JDBC en runtime.
+-keep class net.sourceforge.jtds.** { *; }
+-keep class com.microsoft.sqlserver.jdbc.** { *; }
+-dontwarn net.sourceforge.jtds.**
+-dontwarn com.microsoft.sqlserver.jdbc.**
+
+# Clases usadas vía reflexión por los drivers.
+-keep class javax.sql.** { *; }
+-keep class javax.naming.** { *; }
+-dontwarn javax.naming.**
