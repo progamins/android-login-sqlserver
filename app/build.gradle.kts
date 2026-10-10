@@ -32,7 +32,9 @@ android {
 
     buildTypes {
         release {
-            isMinifyEnabled = false
+            // Ofuscación activada: dificulta la ingeniería inversa del APK
+            // (las credenciales de BuildConfig siguen siendo extraíbles — usa una API REST intermedia).
+            isMinifyEnabled = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -52,8 +54,6 @@ dependencies {
     implementation(libs.activity)
     implementation(libs.constraintlayout)
     implementation(files("libs\\jtds-1.3.1.jar"))
-    implementation(files("libs\\mssql-jdbc-12.6.3.jre11.jar"))
-    implementation(files("libs\\mssql-jdbc-12.6.3.jre11.jar"))
     implementation(files("libs\\mssql-jdbc-12.6.3.jre11.jar"))
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
