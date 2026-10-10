@@ -81,14 +81,7 @@ Sin `local.properties` el build usa placeholders `YOUR_SERVER_IP:PORT` y fallar�
 ### 🚨 Acciones requeridas por tu parte (no automatizables desde código)
 
 1. **Rotar credenciales ya expuestas.** El historial de git (commit antiguo de `ConnetionBD.java`) contiene credenciales reales de SQL Server. Al estar publicadas, deben considerarse **comprometidas**: cambia la contraseña del usuario de BD y, si la IP era pública, restringe el firewall.
-2. **Purgar el historial.** Aunque el archivo actual ya no tiene secretos, el commit antiguo sigue accesible. Usa `git filter-repo` o BFG:
-   ```bash
-   # Con git-filter-repo (recomendado)
-   pip install git-filter-repo
-   git filter-repo --replace-text <(echo 'LA_PASSWORD_ANTIGUA==>REMOVIDA')
-   git push --force --all
-   ```
-   OJO: reescribir el historial requiere `push --force` y avisar a quien tenga clones.
+2. **Historial purgado** ✅ — Las credenciales del commit original fueron eliminadas de toda la historia con `git filter-repo --replace-text` y el historial reescrito en remoto (SHAs nuevos). Aun así, **rota la contraseña en el servidor SQL**: el valor filtrado debe considerarse comprometido para siempre.
 3. **Migrar contraseñas a hash.** La tabla `Usuarios` almacena `Clave` en texto plano. Migrar a `bcrypt`/`Argon2` requiere cambiar el esquema y comparar hashes en el servidor — no es seguro hacerlo solo desde la app.
 4. **Usuario de BD con mínimos privilegios.** Crea un login de SQL Server que SOLO tenga permisos de lectura/escritura sobre la tabla `Usuarios`, no `sa` ni admin.
 5. **Arquitectura:** para producción, la app NO debe conectar directo a la BD. Levanta una API REST (ver [`aplicativo-java`](https://github.com/progamins/aplicativo-java)) y reemplaza `ConnetionBD` por Retrofit.
